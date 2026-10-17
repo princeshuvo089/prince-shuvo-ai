@@ -1,32 +1,32 @@
 export default async function handler(req, res) {
-  // শুধুমাত্র POST রিকোয়েস্ট অনুমতি পাবে
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { messages, toolContext } = req.body;
+    const { messages, toolContext, language = 'bn' } = req.body;
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: 'API Key পাওয়া যায়নি। Vercel সেটিংস চেক করুন।' });
+      return res.status(500).json({ error: 'Gemini API Key অনুপস্থিত। Vercel এনভায়রনমেন্ট ভেরিয়েবল চেক করুন।' });
     }
 
-    // PRINCE SHUVO AI-এর মূল ব্যক্তিত্ব
-    const systemInstruction = `
-      You are "PRINCE SHUVO AI", a premium, modern personal AI Assistant created by PRINCE SHUVO.
-      Slogan: "তোমার কণ্ঠ, তোমার AI, তোমার পৃথিবী।"
-      
-      Instructions:
-      - Always be polite, smart, and helpful.
-      - Answer fluently in Bengali, English, or Hindi depending on the user input.
-      - Keep voice answers brief and crisp (1-3 sentences) so it sounds natural when spoken aloud.
-      ${toolContext ? `Current Tool Mode: ${toolContext}` : ''}
+    // PRINCE SHUVO AI-এর এক্সিকিউটিভ ব্যক্তিত্ব ও সিস্টেম প্রম্পট
+    const systemPrompt = `
+You are "PRINCE SHUVO AI", an elite, world-class futuristic Personal AI Assistant created by PRINCE SHUVO.
+Slogan: "Your Voice. Your AI. Your World." ("তোমার কণ্ঠ, তোমার AI, তোমার পৃথিবী।")
+
+Personality & Rules:
+1. Sophisticated, intelligent, warm, polite, and executive.
+2. Primary languages: Bengali, English, and Hindi. Respond in the exact language the user used.
+3. For voice conversations, keep answers concise (2 to 3 sentences maximum) and natural for Speech Synthesis.
+4. For text chat, format your output with clean Markdown, bold headers, and structured code blocks where applicable.
+5. Always respect your creator: PRINCE SHUVO.
+${toolContext ? `ACTIVE TOOL MODE: ${toolContext}` : ''}
     `;
 
-    // Gemini API ফরম্যাটে হিস্ট্রি সাজানো
     const contents = [
-      { role: 'user', parts: [{ text: systemInstruction }] },
+      { role: 'user', parts: [{ text: systemPrompt }] },
       ...(messages || []).map(msg => ({
         role: msg.role === 'assistant' ? 'model' : 'user',
         parts: [{ text: msg.content }]
@@ -49,6 +49,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ reply });
 
   } catch (error) {
-    return res.status(500).json({ error: 'সার্ভারে সাময়িক সমস্যা হয়েছে।' });
+    return res.status(500).json({ error: 'সার্ভারে সাময়িক সমস্যা দেখা দিয়েছে।' });
   }
 }
