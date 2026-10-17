@@ -10,7 +10,7 @@
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden">
 
-  <!-- ১. ডেস্কটপ সাইডবার / লোগো ব্র্যান্ডিং -->
+  <!-- ১. ডেস্কটপ সাইডবার -->
   <aside class="hidden md:flex flex-col w-64 glass-panel border-r border-purple-500/20 p-5 justify-between">
     <div class="space-y-6">
       <div class="flex items-center gap-3">
@@ -21,7 +21,6 @@
         </div>
       </div>
 
-      <!-- সাইডবার ন্যাভিগেশন মেনু -->
       <nav class="space-y-1.5 text-sm">
         <button onclick="navigateView('home')" id="snav-home" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-purple-600/20 text-cyan-400 font-medium">🏠 Home</button>
         <button onclick="navigateView('voice')" id="snav-voice" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5">🎙️ Voice Chat</button>
@@ -38,7 +37,7 @@
     </div>
   </aside>
 
-  <!-- ২. মূল ভিউ কনটেইনার -->
+  <!-- ২. মূল স্ক্রিন -->
   <div class="flex-1 flex flex-col h-full overflow-hidden">
     
     <!-- মোবাইল টপবার -->
@@ -56,30 +55,35 @@
       </div>
     </header>
 
-    <!-- স্ক্রিন এরিয়া (ভিউ সুইচিং) -->
     <main class="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col items-center justify-center">
 
-      <!-- ভিউ ১: হোম পেজ -->
+      <!-- ভিউ ১: হোম পেজ (নতুন সাই-ফাই ভিউ) -->
       <section id="view-home" class="w-full max-w-xl flex flex-col items-center text-center space-y-6">
         <div class="space-y-1">
           <h2 class="text-lg md:text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-300 to-pink-500 bg-clip-text text-transparent">
-            Hello, Prince! How can I help you today?
+            Hello, Prince! How can I help you?
           </h2>
           <p class="text-xs md:text-sm text-gray-400">আজ তোমাকে কীভাবে সাহায্য করতে পারি?</p>
         </div>
 
-        <!-- সেন্ট্রাল অ্যানিমেটেড Orb -->
-        <div class="orb-container my-3" onclick="navigateView('voice')">
-          <div class="orb-aura"></div>
-          <div class="orb-ring"></div>
-          <div class="ai-orb" id="home-orb">
-            <span class="text-3xl">👑</span>
+        <!-- 🚀 নতুন প্রিমিয়াম সাই-ফাই AI ORB (কোনো ইমোজি নেই) -->
+        <div class="orb-container my-2" onclick="navigateView('voice')">
+          <div class="orb-aura-glow"></div>
+          <div class="orb-radar-ring"></div>
+          <div class="orb-inner-ring"></div>
+          <div class="ai-core-sphere" id="home-core">
+            <div class="ai-core-inner">
+              <img src="https://prince-cloud.onrender.com/files/e0f465f91f14.png" class="core-brand-logo" alt="Prince Shuvo" />
+              <div class="mini-equalizer active">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- অ্যাকশন বাটন -->
+        <!-- অ্যাকশন বাটনসমূহ -->
         <div class="flex gap-3 w-full max-w-xs">
-          <button onclick="navigateView('voice')" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 font-semibold text-xs text-white shadow-lg shadow-cyan-500/20 active:scale-95 transition">
+          <button onclick="navigateView('voice')" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 font-semibold text-xs text-white shadow-lg shadow-cyan-500/25 active:scale-95 transition">
             Start Voice Chat 🎙️
           </button>
           <button onclick="navigateView('text')" class="flex-1 py-3 rounded-xl glass-panel border border-purple-500/30 font-semibold text-xs text-gray-200 hover:text-white active:scale-95 transition">
@@ -87,49 +91,49 @@
           </button>
         </div>
 
-        <!-- কুইক টুলস শর্টকাট গ্রিড -->
-        <div class="grid grid-cols-2 gap-2.5 w-full pt-2">
+        <!-- কুইক টুলস গ্রিড -->
+        <div class="grid grid-cols-2 gap-2.5 w-full pt-1">
           <div onclick="launchTool('Study Assistant: পড়াশোনার বিষয় ব্যাখ্যা করো')" class="glass-panel p-3 rounded-xl text-left cursor-pointer hover:border-cyan-400 transition">
-            <div class="text-cyan-400 text-sm font-semibold">📚 Study Assistant</div>
-            <p class="text-[10px] text-gray-400">পড়াশোনার প্রশ্নের সহজ সমাধান</p>
+            <div class="text-cyan-400 text-xs font-semibold">📚 Study Assistant</div>
+            <p class="text-[10px] text-gray-400">সহজ পড়াশোনার সমাধান</p>
           </div>
-          <div onclick="launchTool('Coding Assistant: প্রোগ্রামিং কোড লিখো ও বাগ ফিক্স করো')" class="glass-panel p-3 rounded-xl text-left cursor-pointer hover:border-purple-400 transition">
-            <div class="text-purple-400 text-sm font-semibold">💻 Coding Assistant</div>
-            <p class="text-[10px] text-gray-400">কোড তৈরি ও বাগ ঠিক করা</p>
+          <div onclick="launchTool('Coding Assistant: কোড লিখে ও বাগ ফিক্স করে দাও')" class="glass-panel p-3 rounded-xl text-left cursor-pointer hover:border-purple-400 transition">
+            <div class="text-purple-400 text-xs font-semibold">💻 Coding Assistant</div>
+            <p class="text-[10px] text-gray-400">কোড তৈরি ও বাগ ফিক্স</p>
           </div>
-          <div onclick="launchTool('Translator: বাংলা, ইংরেজি ও হিন্দিতে সঠিক অনুবাদ করো')" class="glass-panel p-3 rounded-xl text-left cursor-pointer hover:border-pink-400 transition">
-            <div class="text-pink-400 text-sm font-semibold">🌐 Translator</div>
+          <div onclick="launchTool('Translator: বাংলা, ইংরেজি ও হিন্দিতে অনুবাদ করো')" class="glass-panel p-3 rounded-xl text-left cursor-pointer hover:border-pink-400 transition">
+            <div class="text-pink-400 text-xs font-semibold">🌐 Translator</div>
             <p class="text-[10px] text-gray-400">বহুভাষিক অনুবাদক</p>
           </div>
-          <div onclick="launchTool('Writing Assistant: ইমেইল, ক্যাপশন ও আর্টিকেল লেখো')" class="glass-panel p-3 rounded-xl text-left cursor-pointer hover:border-amber-400 transition">
-            <div class="text-amber-400 text-sm font-semibold">✍️ Writing Assistant</div>
+          <div onclick="launchTool('Writing Assistant: সুন্দর পোস্ট বা ইমেইল লেখো')" class="glass-panel p-3 rounded-xl text-left cursor-pointer hover:border-amber-400 transition">
+            <div class="text-amber-400 text-xs font-semibold">✍️ Writing Assistant</div>
             <p class="text-[10px] text-gray-400">আর্টিকেল ও পোস্ট তৈরি</p>
           </div>
         </div>
       </section>
 
-      <!-- ভিউ ২: ডেডিকেটেড ভয়েস চ্যাট ইন্টারফেস -->
+      <!-- ভিউ ২: ভয়েস চ্যাট পেজ -->
       <section id="view-voice" class="hidden w-full max-w-lg flex flex-col items-center text-center space-y-6">
         <div class="space-y-1">
-          <h2 id="voice-status-title" class="text-base md:text-lg font-bold text-gray-200">AI প্রস্তুত — মাইক্রোফোনে চাপ দিন</h2>
+          <h2 id="voice-status-title" class="text-base font-bold text-gray-200">AI প্রস্তুত — মাইক্রোফোনে চাপ দিন</h2>
           <p id="voice-transcript" class="text-xs text-purple-300 min-h-[18px]">আপনার বলা কথা এখানে ভেসে উঠবে...</p>
         </div>
 
-        <!-- বড় ভয়েস Orb ও সাউন্ড ওয়েভ -->
+        <!-- ভয়েস পেজের সাই-ফাই Orb -->
         <div class="orb-container">
-          <div class="orb-aura"></div>
-          <div class="orb-ring"></div>
-          <div class="ai-orb" id="voice-orb">
-            <span id="orb-icon" class="text-3xl">🎙️</span>
+          <div class="orb-aura-glow"></div>
+          <div class="orb-radar-ring"></div>
+          <div class="orb-inner-ring"></div>
+          <div class="ai-core-sphere" id="voice-core">
+            <div class="ai-core-inner">
+              <img src="https://prince-cloud.onrender.com/files/e0f465f91f14.png" class="core-brand-logo" alt="Logo" />
+              <div class="mini-equalizer" id="voice-eq">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- সাউন্ড ওয়েভ ভিজ্যুয়ালাইজার -->
-        <div class="sound-wave" id="visualizer-wave">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
-
-        <!-- রিয়েলটাইম ভয়েস কন্ট্রোল বাটন -->
         <div class="flex items-center gap-3">
           <button id="voice-mic-trigger" onclick="toggleVoiceInput()" class="px-7 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-xs shadow-lg active:scale-95 transition">
             কথা বলুন 🎙️
@@ -142,15 +146,13 @@
           </button>
         </div>
 
-        <!-- AI উত্তরের লাইভ ডিসপ্লে -->
         <div class="glass-panel p-4 rounded-2xl w-full text-xs text-gray-300 text-left border-l-4 border-cyan-400 min-h-[60px]" id="voice-reply-card">
           AI-এর উত্তর এখানে লিখিত ও কণ্ঠে প্রকাশিত হবে...
         </div>
       </section>
 
-      <!-- ভিউ ৩: টেক্সট চ্যাট ইন্টারফেস -->
+      <!-- ভিউ ৩: টেক্সট চ্যাট পেজ -->
       <section id="view-text" class="hidden w-full max-w-2xl h-full flex flex-col glass-panel rounded-2xl overflow-hidden border border-purple-500/20">
-        <!-- চ্যাট হেডার অ্যাকশন -->
         <div class="px-4 py-2.5 bg-black/40 border-b border-white/10 flex justify-between items-center text-xs">
           <span class="text-gray-400 font-semibold" id="chat-mode-indicator">Active: General Assistant</span>
           <div class="flex gap-2">
@@ -159,67 +161,56 @@
           </div>
         </div>
 
-        <!-- মেসেজ স্ক্রিন -->
         <div id="chat-feed" class="flex-1 overflow-y-auto p-4 space-y-4">
           <div class="flex gap-2.5 items-start">
             <img src="https://prince-cloud.onrender.com/files/e0f465f91f14.png" class="w-7 h-7 rounded-full object-cover neon-border-purple mt-1" />
             <div class="glass-panel p-3.5 rounded-2xl rounded-tl-sm text-xs leading-relaxed max-w-[85%]">
-              Hello, Prince! How can I help you today? যেকোনো প্রশ্ন লিখে বা ভয়েসে জিজ্ঞেস করতে পারো।
+              Hello, Prince! How can I help you today? যেকোনো কিছু লিখে বা ভয়েসে জিজ্ঞেস করতে পারো।
             </div>
           </div>
         </div>
 
-        <!-- ইনপুট বার -->
         <div class="p-3 bg-black/60 border-t border-white/10 flex items-center gap-2">
           <input type="text" id="text-input" placeholder="PRINCE SHUVO AI-কে কিছু জিজ্ঞেস করো..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 outline-none focus:border-cyan-400 transition" />
+          <button onclick="toggleVoiceInput()" title="ভয়েসে বলুন" class="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-white active:scale-95 transition">
+            🎙️
+          </button>
           <button onclick="submitTextMessage()" class="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center text-white active:scale-95 transition">
             🚀
           </button>
         </div>
       </section>
 
-      <!-- ভিউ ৪: AI Tools হাব -->
+      <!-- ভিউ ৪: টুলস -->
       <section id="view-tools" class="hidden w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-3.5">
-        <div onclick="launchTool('Study Assistant: প্রতিটি বিষয় উদাহরণসহ নিখুঁত করে বুঝিয়ে দাও')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-cyan-400 transition">
+        <div onclick="launchTool('Study Assistant: পড়াশোনার বিষয় নিখুঁতভাবে বুঝাও')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-cyan-400 transition">
           <h3 class="text-sm font-bold text-cyan-400 mb-1">📚 Study Assistant</h3>
-          <p class="text-xs text-gray-400 leading-relaxed">গণিত, বিজ্ঞান ও জটিল পড়াশোনার বিষয় সহজ ভাষায় বুঝে নাও।</p>
+          <p class="text-xs text-gray-400">জটিল বিষয় সহজ ভাষায় বুঝে নাও।</p>
         </div>
-        <div onclick="launchTool('Coding Assistant: এইচটিএমএল, সিএসএস, জেএস ও অন্যান্য কোড সমাধান করো')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-purple-400 transition">
+        <div onclick="launchTool('Coding Assistant: কোড লিখে ও বাগ ঠিক করে দাও')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-purple-400 transition">
           <h3 class="text-sm font-bold text-purple-400 mb-1">💻 Coding Assistant</h3>
-          <p class="text-xs text-gray-400 leading-relaxed">ওয়েব ডেভেলপমেন্ট, অ্যালগরিদম ও কোড বাগ ফিক্সের বিশ্বস্ত সহকারী।</p>
+          <p class="text-xs text-gray-400">ওয়েব কোড ও অ্যালগরিদম সহকারী।</p>
         </div>
-        <div onclick="launchTool('Writing Assistant: আকর্ষণীয় ক্যাপশন, ইমেইল, নোটিশ বা ব্লগ তৈরি করো')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-pink-400 transition">
+        <div onclick="launchTool('Writing Assistant: আকর্ষণীয় লেখা তৈরি করো')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-pink-400 transition">
           <h3 class="text-sm font-bold text-pink-400 mb-1">✍️ Writing Assistant</h3>
-          <p class="text-xs text-gray-400 leading-relaxed">প্রফেশনাল ইমেইল, সোশ্যাল ক্যাপশন ও ব্লগ কনটেন্ট লেখার টুল।</p>
+          <p class="text-xs text-gray-400">ইমেইল, ক্যাপশন ও আর্টিকেল তৈরি।</p>
         </div>
-        <div onclick="launchTool('Translator: নিখুঁত ব্যাকরণসহ বাংলা, ইংরেজি ও হিন্দি অনুবাদ করো')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-indigo-400 transition">
+        <div onclick="launchTool('Translator: বাংলা, ইংরেজি ও হিন্দি অনুবাদ করো')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-indigo-400 transition">
           <h3 class="text-sm font-bold text-indigo-400 mb-1">🌐 Smart Translator</h3>
-          <p class="text-xs text-gray-400 leading-relaxed">বাংলা, ইংরেজি ও হিন্দি ভাষার দ্বিমুখী নির্ভুল অনুবাদ।</p>
-        </div>
-        <div onclick="launchTool('Summarizer: মূল পয়েন্টগুলো হাইলাইট করে সংক্ষেপে উপস্থাপন করো')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-emerald-400 transition">
-          <h3 class="text-sm font-bold text-emerald-400 mb-1">📝 Smart Summarizer</h3>
-          <p class="text-xs text-gray-400 leading-relaxed">যেকোনো বড় আর্টিকেল বা প্যারাগ্রাফের মূল বক্তব্য সংক্ষেপে পেয়ে যাও।</p>
-        </div>
-        <div onclick="alert('Image Vision API পরবর্তী মডেলে সম্পূর্ণ কার্যকর করা হবে!')" class="glass-panel p-4 rounded-xl cursor-pointer hover:border-amber-400 transition">
-          <h3 class="text-sm font-bold text-amber-400 mb-1">🖼️ Image Understanding</h3>
-          <p class="text-xs text-gray-400 leading-relaxed">ছবি আপলোড করে প্রশ্ন ও বিশ্লেষণের সুবিধা।</p>
+          <p class="text-xs text-gray-400">নিখুঁত বহুভাষিক অনুবাদক।</p>
         </div>
       </section>
 
-      <!-- ভিউ ৫: হিস্ট্রি ও মেমোরি -->
+      <!-- ভিউ ৫: হিস্ট্রি -->
       <section id="view-history" class="hidden w-full max-w-md glass-panel p-5 rounded-2xl space-y-4">
-        <h3 class="text-sm font-bold text-cyan-400 border-b border-white/10 pb-2">📜 চ্যাট হিস্ট্রি ও মেমোরি</h3>
-        <div id="history-items" class="space-y-2 text-xs max-h-60 overflow-y-auto">
-          <!-- ডাইনামিক হিস্ট্রি আইটেম -->
-        </div>
-        <button onclick="wipeAllHistory()" class="w-full py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs hover:bg-red-500/30 transition">
-          সমস্ত হিস্ট্রি মুছে ফেলুন
-        </button>
+        <h3 class="text-sm font-bold text-cyan-400 border-b border-white/10 pb-2">📜 চ্যাট হিস্ট্রি</h3>
+        <div id="history-items" class="space-y-2 text-xs max-h-60 overflow-y-auto"></div>
+        <button onclick="wipeAllHistory()" class="w-full py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs hover:bg-red-500/30 transition">হিস্ট্রি মুছুন</button>
       </section>
 
       <!-- ভিউ ৬: সেটিংস -->
       <section id="view-settings" class="hidden w-full max-w-sm glass-panel p-5 rounded-2xl space-y-4">
-        <h3 class="text-sm font-bold text-purple-400 border-b border-white/10 pb-2">⚙️ সেটিংস ও কন্ট্রোল</h3>
+        <h3 class="text-sm font-bold text-purple-400 border-b border-white/10 pb-2">⚙️ সেটিংস</h3>
         <div>
           <label class="text-[11px] text-gray-400 block mb-1">ভাষা (Language):</label>
           <select id="setting-language" class="w-full bg-white/5 border border-white/10 p-2 rounded-lg text-xs text-white outline-none">
@@ -234,20 +225,17 @@
         </div>
       </section>
 
-      <!-- ভিউ ৭: About (নির্মাতা ও ব্র্যান্ড) -->
+      <!-- ভিউ ৭: About -->
       <section id="view-about" class="hidden w-full max-w-sm glass-panel p-5 rounded-2xl text-center space-y-3">
         <img src="https://prince-cloud.onrender.com/files/e0f465f91f14.png" class="w-16 h-16 rounded-2xl mx-auto neon-border-purple object-cover" />
         <h3 class="brand-font text-base font-bold text-cyan-400">PRINCE SHUVO AI</h3>
         <p class="text-xs text-purple-300">“Your Voice. Your AI. Your World.”</p>
-        <p class="text-[11px] text-gray-400 leading-relaxed">
-          নির্মাতা: <strong class="text-white">PRINCE SHUVO</strong><br />
-          একটি আধুনিক, সুরক্ষিত ও রিয়েলটাইম পার্সোনাল ভয়েস অ্যাসিস্ট্যান্ট ওয়েব প্ল্যাটফর্ম।
-        </p>
+        <p class="text-[11px] text-gray-400">নির্মাতা: <strong class="text-white">PRINCE SHUVO</strong></p>
       </section>
 
     </main>
 
-    <!-- ৩. মোবাইল বটম ন্যাভিগেশন বার -->
+    <!-- ৩. মোবাইল বটম বার -->
     <nav class="md:hidden flex justify-around items-center py-2.5 glass-panel border-t border-purple-500/20 text-xs">
       <button onclick="navigateView('home')" id="bnav-home" class="flex flex-col items-center text-cyan-400">
         <span class="text-base">🏠</span>
