@@ -23,33 +23,56 @@ Rules:
 ${toolContext ? `Current Tool: ${toolContext}` : ''}
     `;
 
-    // Gemini API-এর জন্য সঠিক ফরম্যাট
     const contents = (messages || []).map(msg => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msg.content }]
     }));
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: {
-          parts: [{ text: systemPrompt }]
-        },
-        contents: contents
-      })
-    });
+    // গুগলের বর্তমান সক্রিয় ও দ্রুততম মডেলগুলোর তালিকা (অটো-ফলব্যাক)
+    const availableModels = [
+      'gemini-2.5-flash',
+      'gemini-2.0-flash',
+      'gemini-flash-latest',
+      'gemini-2.5-flash-lite'
+    ];
 
-    const data = await response.json();
+    let finalReply = null;
+    let errorDetail = null;
 
-    if (data.error) {
-      return res.status(400).json({ error: data.error.message });
+    // যেকোনো একটি সক্রিয় মডেল পাওয়া মাত্রই উত্তর নিয়ে আসবে
+    for (const model of availableModels) {
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: {
+              parts: [{ text: systemPrompt }]
+            },
+            contents: contents
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+          finalReply = data.candidates[0].content.parts[0].text;
+          break; // সফলভাবে উত্তর পাওয়া গেলে লুপ শেষ
+        } else if (data.error) {
+          errorDetail = data.error.message;
+        }
+      } catch (err) {
+        errorDetail = err.message;
+      }
     }
 
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, আমি বুঝতে পারিনি। আবার বলুন।";
-    return res.status(200).json({ reply });
+    if (finalReply) {
+      return res.status(200).json({ reply: finalReply });
+    } else {
+      return res.status(400).json({ error: errorDetail || 'গুগল এআই থেকে উত্তর পাওয়া যায়নি।' });
+    }
 
   } catch (error) {
-    return res.status(500).json({ error: 'সার্ভারে সমস্যা হয়েছে।' });
+    return res.status(500).json({ error: 'সার্ভারে সাময়িক সমস্যা হয়েছে।' });
   }
 }
