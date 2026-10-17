@@ -1,4 +1,3 @@
-// PRINCE SHUVO AI — Client Engine
 let activeView = 'home';
 let conversationHistory = [];
 let isListening = false;
@@ -6,22 +5,19 @@ let recognition = null;
 let currentToolContext = '';
 let lastReplyText = '';
 
-// ১. নেভিগেশন কন্ট্রোলার (View Switching)
+// ১. নেভিগেশন
 function navigateView(viewName) {
   stopAIVoice();
   activeView = viewName;
 
-  // সব সেকশন লুকানো
   ['home', 'voice', 'text', 'tools', 'history', 'settings', 'about'].forEach(v => {
     const el = document.getElementById(`view-${v}`);
     if (el) el.classList.add('hidden');
   });
 
-  // টার্গেট সেকশন দেখানো
   const activeEl = document.getElementById(`view-${viewName}`);
   if (activeEl) activeEl.classList.remove('hidden');
 
-  // মোবাইল বটম বার আপডেট
   ['home', 'voice', 'text', 'tools', 'settings'].forEach(b => {
     const btn = document.getElementById(`bnav-${b}`);
     if (btn) btn.className = (b === viewName) ? 'flex flex-col items-center text-cyan-400' : 'flex flex-col items-center text-gray-400';
@@ -30,7 +26,7 @@ function navigateView(viewName) {
   if (viewName === 'history') renderHistoryList();
 }
 
-// ২. স্পিচ রিকগনিশন (Speech-to-Text)
+// ২. স্পিচ রিকগনিশন (STT)
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
@@ -45,8 +41,9 @@ if (SpeechRecognition) {
 
   recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript;
-    document.getElementById('voice-transcript').innerText = `"${transcript}"`;
-    sendQueryToAI(transcript, true);
+    const vTranscript = document.getElementById('voice-transcript');
+    if (vTranscript) vTranscript.innerText = `"${transcript}"`;
+    sendQueryToAI(transcript, activeView === 'voice');
   };
 
   recognition.onerror = () => resetOrbVisual();
@@ -55,7 +52,7 @@ if (SpeechRecognition) {
 
 function toggleVoiceInput() {
   if (!recognition) {
-    alert("আপনার ব্রাউজারে ভয়েস রিকগনিশন সাপোর্ট নেই। অনুগ্রহ করে Chrome ব্যবহার করুন।");
+    alert("আপনার ব্রাউজারে মাইক সাপোর্ট নেই। Google Chrome ব্রাউজার ব্যবহার করুন।");
     return;
   }
   if (isListening) {
@@ -63,22 +60,26 @@ function toggleVoiceInput() {
     resetOrbVisual();
   } else {
     stopAIVoice();
-    recognition.lang = document.getElementById('setting-language').value;
-    recognition.start();
+    const lang = document.getElementById('setting-language')?.value || 'bn-BD';
+    recognition.lang = lang;
+    try {
+      recognition.start();
+    } catch (e) {
+      recognition.stop();
+    }
   }
 }
 
-// ৩. এআই ব্যাকএন্ড রিকোয়েস্ট হ্যান্ডলার
+// ৩. এআই ব্যাকএন্ড রিকোয়েস্ট
 async function sendQueryToAI(promptText, fromVoice = false) {
   if (!promptText.trim()) return;
 
   conversationHistory.push({ role: 'user', content: promptText });
-  if (!fromVoice) appendChatBubble('user', promptText);
+  appendChatBubble('user', promptText);
 
   updateOrbVisual('thinking');
-  if (fromVoice) {
-    document.getElementById('voice-status-title').innerText = "PRINCE SHUVO AI চিন্তা করছে...";
-  }
+  const vTitle = document.getElementById('voice-status-title');
+  if (vTitle && fromVoice) vTitle.innerText = "PRINCE SHUVO AI চিন্তা করছে...";
 
   try {
     const res = await fetch('/api/chat', {
@@ -87,45 +88,51 @@ async function sendQueryToAI(promptText, fromVoice = false) {
       body: JSON.stringify({
         messages: conversationHistory,
         toolContext: currentToolContext,
-        language: document.getElementById('setting-language').value
+        language: document.getElementById('setting-language')?.value || 'bn-BD'
       })
     });
 
     const data = await res.json();
+
+    if (data.error) {
+      appendChatBubble('assistant', `সমস্যা: ${data.error}`);
+      resetOrbVisual();
+      return;
+    }
+
     const reply = data.reply || "কোনো উত্তর পাওয়া যায়নি।";
     lastReplyText = reply;
 
     conversationHistory.push({ role: 'assistant', content: reply });
     saveToLocalStorage(promptText, reply);
 
-    if (fromVoice) {
-      document.getElementById('voice-reply-card').innerText = reply;
-      speakAIText(reply);
-    } else {
-      appendChatBubble('assistant', reply);
-      resetOrbVisual();
-    }
+    const vCard = document.getElementById('voice-reply-card');
+    if (vCard) vCard.innerText = reply;
+
+    appendChatBubble('assistant', reply);
+
+    // ভয়েস শুনবে
+    speakAIText(reply);
 
   } catch (error) {
-    const err = "সার্ভারে সাময়িক সমস্যা হয়েছে।";
-    if (fromVoice) document.getElementById('voice-reply-card').innerText = err;
-    else appendChatBubble('assistant', err);
+    appendChatBubble('assistant', "সার্ভারের সাথে যোগাযোগ করা যায়নি। ইন্টারনেট চেক করুন।");
     resetOrbVisual();
   }
 }
 
-// ৪. টেক্সট-টু-স্পিচ (Speech Synthesis)
+// ৪. টেক্সট-টু-স্পিচ (TTS)
 function speakAIText(text) {
   if (!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
 
   updateOrbVisual('speaking');
-  document.getElementById('voice-status-title').innerText = "AI উত্তর দিচ্ছে...";
+  const vTitle = document.getElementById('voice-status-title');
+  if (vTitle) vTitle.innerText = "AI কথা বলছে...";
 
   const cleanText = text.replace(/[*#`_]/g, '');
   const utterance = new SpeechSynthesisUtterance(cleanText);
-  utterance.lang = document.getElementById('setting-language').value;
-  utterance.rate = parseFloat(document.getElementById('setting-rate').value);
+  utterance.lang = document.getElementById('setting-language')?.value || 'bn-BD';
+  utterance.rate = parseFloat(document.getElementById('setting-rate')?.value || 1.0);
 
   utterance.onend = () => resetOrbVisual();
   utterance.onerror = () => resetOrbVisual();
@@ -142,26 +149,30 @@ function replayLastResponse() {
   if (lastReplyText) speakAIText(lastReplyText);
 }
 
-// ৫. Orb অ্যানিমেশন স্ট্যাটাস ম্যানেজার
+// ৫. Orb স্ট্যাটাস
 function updateOrbVisual(state) {
   const orb = document.getElementById('voice-orb');
   const wave = document.getElementById('visualizer-wave');
   const triggerBtn = document.getElementById('voice-mic-trigger');
 
+  if (!orb) return;
+
   if (state === 'listening') {
     orb.className = 'ai-orb listening';
     document.getElementById('orb-icon').innerText = '🎙️';
-    wave.classList.add('active');
-    triggerBtn.innerText = 'শুনছি... 🛑';
-    triggerBtn.className = 'px-7 py-3 rounded-full bg-red-500 text-white font-bold text-xs shadow-lg animate-pulse';
+    if (wave) wave.classList.add('active');
+    if (triggerBtn) {
+      triggerBtn.innerText = 'শুনছি... 🛑';
+      triggerBtn.className = 'px-7 py-3 rounded-full bg-red-500 text-white font-bold text-xs shadow-lg animate-pulse';
+    }
   } else if (state === 'thinking') {
     orb.className = 'ai-orb thinking';
     document.getElementById('orb-icon').innerText = '⚡';
-    wave.classList.remove('active');
+    if (wave) wave.classList.remove('active');
   } else if (state === 'speaking') {
     orb.className = 'ai-orb speaking';
     document.getElementById('orb-icon').innerText = '🔊';
-    wave.classList.add('active');
+    if (wave) wave.classList.add('active');
   }
 }
 
@@ -178,10 +189,11 @@ function resetOrbVisual() {
     triggerBtn.innerText = 'কথা বলুন 🎙️';
     triggerBtn.className = 'px-7 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-xs shadow-lg active:scale-95';
   }
-  document.getElementById('voice-status-title').innerText = "AI প্রস্তুত — মাইক্রোফোনে চাপ দিন";
+  const vTitle = document.getElementById('voice-status-title');
+  if (vTitle) vTitle.innerText = "AI প্রস্তুত — মাইক্রোফোনে চাপ দিন";
 }
 
-// ৬. টেক্সট চ্যাট ও টুলস সাহায্যকারী
+// ৬. টেক্সট মেসেজ সাবমিট
 function submitTextMessage() {
   const input = document.getElementById('text-input');
   const val = input.value.trim();
@@ -196,6 +208,8 @@ document.getElementById('text-input')?.addEventListener('keypress', (e) => {
 
 function appendChatBubble(role, text) {
   const container = document.getElementById('chat-feed');
+  if (!container) return;
+
   const wrap = document.createElement('div');
   wrap.className = role === 'user' ? 'flex justify-end' : 'flex gap-2.5 items-start';
 
@@ -225,18 +239,18 @@ function appendChatBubble(role, text) {
 
 function launchTool(toolContext) {
   currentToolContext = toolContext;
-  document.getElementById('chat-mode-indicator').innerText = `Active Tool: ${toolContext.split(':')[0]}`;
+  document.getElementById('chat-mode-indicator').innerText = `Active: ${toolContext.split(':')[0]}`;
   navigateView('text');
-  appendChatBubble('assistant', `টুল মোড শুরু হয়েছে: "${toolContext.split(':')[0]}"। আপনার প্রশ্নটি করুন!`);
+  appendChatBubble('assistant', `টুল মোড শুরু হয়েছে: "${toolContext.split(':')[0]}"। এখন আপনার প্রশ্নটি করুন!`);
 }
 
 function clearChat() {
   conversationHistory = [];
-  document.getElementById('chat-feed').innerHTML = '';
+  const feed = document.getElementById('chat-feed');
+  if (feed) feed.innerHTML = '';
   appendChatBubble('assistant', 'চ্যাট হিস্ট্রি রিসেট করা হয়েছে।');
 }
 
-// ৭. হিস্ট্রি সংরক্ষণ ও লোড (LocalStorage)
 function saveToLocalStorage(q, a) {
   const history = JSON.parse(localStorage.getItem('ps_chat_history') || '[]');
   history.unshift({ q, a, time: new Date().toLocaleTimeString() });
@@ -245,6 +259,7 @@ function saveToLocalStorage(q, a) {
 
 function renderHistoryList() {
   const container = document.getElementById('history-items');
+  if (!container) return;
   const history = JSON.parse(localStorage.getItem('ps_chat_history') || '[]');
   if (history.length === 0) {
     container.innerHTML = '<p class="text-gray-500">কোনো হিস্ট্রি পাওয়া যায়নি।</p>';
