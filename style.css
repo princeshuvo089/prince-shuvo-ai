@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Orbitron:wght@600;800;900&display=swap');
+
+:root {
+  --bg-dark: #05070e;
+  --bg-card: rgba(13, 17, 30, 0.7);
+  --neon-cyan: #00f2fe;
+  --neon-purple: #a855f7;
+  --neon-pink: #ec4899;
+  --text-muted: #8e9bb0;
+  --border-glass: rgba(168, 85, 247, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Hind Siliguri', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(0, 242, 254, 0.12) 0%, transparent 40%);
+  color: #f1f5f9;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.brand-font {
+  font-family: 'Orbitron', 'Hind Siliguri', sans-serif;
+}
+
+/* গ্লাসমরফিজম কার্ড */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.neon-border-cyan {
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+}
+
+.neon-border-purple {
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+}
+
+/* অ্যানিমেটেড AI Orb সিস্টেম */
+.orb-container {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-orb {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7928ca, #00f2fe);
+  box-shadow: 0 0 50px rgba(168, 85, 247, 0.6), inset 0 0 25px rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  transition: all 0.5s ease;
+}
+
+.orb-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px dashed rgba(0, 242, 254, 0.4);
+  animation: rotate-ring 20s linear infinite;
+}
+
+.orb-aura {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%);
+  filter: blur(20px);
+  animation: pulse-aura 3s infinite ease-in-out;
+}
+
+/* Orb এর বিভিন্ন স্ট্যাটাস */
+.ai-orb.listening {
+  background: linear-gradient(135deg, #ff0055, #ff5500);
+  box-shadow: 0 0 70px rgba(255, 0, 85, 0.8);
+  transform: scale(1.1);
+}
+
+.ai-orb.thinking {
+  background: linear-gradient(135deg, #ffaa00, #00f2fe);
+  box-shadow: 0 0 70px rgba(255, 170, 0, 0.8);
+  animation: rotate-ring 3s linear infinite;
+}
+
+.ai-orb.speaking {
+  background: linear-gradient(135deg, #00f2fe, #7928ca);
+  box-shadow: 0 0 80px rgba(0, 242, 254, 0.9);
+  animation: pulse-speaking 1s infinite alternate;
+}
+
+@keyframes rotate-ring {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-aura {
+  0%, 100% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.9; }
+}
+
+@keyframes pulse-speaking {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.12); }
+}
+
+/* সাউন্ড ওয়েভ বার */
+.sound-wave {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 30px;
+}
+
+.sound-wave span {
+  width: 4px;
+  height: 10px;
+  background: var(--neon-cyan);
+  border-radius: 4px;
+  transition: 0.2s;
+}
+
+.sound-wave.active span {
+  animation: wave 0.8s infinite ease-in-out;
+}
+
+.sound-wave.active span:nth-child(2) { animation-delay: 0.15s; }
+.sound-wave.active span:nth-child(3) { animation-delay: 0.3s; }
+.sound-wave.active span:nth-child(4) { animation-delay: 0.45s; }
+.sound-wave.active span:nth-child(5) { animation-delay: 0.2s; }
+
+@keyframes wave {
+  0%, 100% { height: 8px; }
+  50% { height: 28px; background: var(--neon-pink); }
+}
