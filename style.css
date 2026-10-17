@@ -2,12 +2,10 @@
 
 :root {
   --bg-dark: #05070e;
-  --bg-card: rgba(13, 17, 30, 0.7);
+  --bg-card: rgba(13, 17, 30, 0.75);
   --neon-cyan: #00f2fe;
   --neon-purple: #a855f7;
   --neon-pink: #ec4899;
-  --text-muted: #8e9bb0;
-  --border-glass: rgba(168, 85, 247, 0.2);
 }
 
 * {
@@ -21,8 +19,8 @@
 body {
   background-color: var(--bg-dark);
   background-image: 
-    radial-gradient(circle at 15% 20%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(0, 242, 254, 0.12) 0%, transparent 40%);
+    radial-gradient(circle at 50% 15%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 85%, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
   color: #f1f5f9;
   min-height: 100vh;
   overflow-x: hidden;
@@ -32,128 +30,166 @@ body {
   font-family: 'Orbitron', 'Hind Siliguri', sans-serif;
 }
 
-/* গ্লাসমরফিজম কার্ড */
 .glass-panel {
   background: var(--bg-card);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-glass);
+  border: 1px solid rgba(168, 85, 247, 0.2);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.neon-border-cyan {
-  border: 1px solid rgba(0, 242, 254, 0.4);
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
 }
 
 .neon-border-purple {
   border: 1px solid rgba(168, 85, 247, 0.4);
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
 }
 
-/* অ্যানিমেটেড AI Orb সিস্টেম */
+/* =========================================
+   হাই-টেক সাই-ফাই AI ORB (ইমোজি ছাড়া নতুন ভিউ)
+   ========================================= */
 .orb-container {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
-.ai-orb {
-  width: 140px;
-  height: 140px;
+/* বাইরের ঘূর্ণায়মান ড্যাশড রাডার রিং */
+.orb-radar-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #7928ca, #00f2fe);
-  box-shadow: 0 0 50px rgba(168, 85, 247, 0.6), inset 0 0 25px rgba(255, 255, 255, 0.5);
+  border: 1.5px dashed rgba(0, 242, 254, 0.4);
+  animation: radar-spin 18s linear infinite;
+}
+
+/* ভেতরের কাউন্টার-ঘূর্ণন রিং */
+.orb-inner-ring {
+  position: absolute;
+  width: 82%;
+  height: 82%;
+  border-radius: 50%;
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  animation: radar-spin-reverse 12s linear infinite;
+}
+
+/* ব্যাকগ্রাউন্ড পালসিং অরা গ্লো */
+.orb-aura-glow {
+  position: absolute;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.6) 0%, rgba(0, 242, 254, 0.3) 50%, transparent 75%);
+  filter: blur(22px);
+  animation: aura-pulse 3s infinite ease-in-out;
+}
+
+/* মূল সাই-ফাই কোর (Rotating Conic Plasma) */
+.ai-core-sphere {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  background: conic-gradient(from 0deg, #00f2fe, #7928ca, #ec4899, #00f2fe);
+  animation: core-rotate 6s linear infinite;
+  box-shadow: 0 0 40px rgba(0, 242, 254, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.4);
   z-index: 2;
   transition: all 0.5s ease;
 }
 
-.orb-ring {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+/* সেন্ট্রাল ফ্রস্টেড গ্লাস ডিস্ক */
+.ai-core-inner {
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  border: 2px dashed rgba(0, 242, 254, 0.4);
-  animation: rotate-ring 20s linear infinite;
+  background: rgba(8, 10, 20, 0.88);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-.orb-aura {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+/* সেন্টারে ভাসমান অফিশিয়াল লোগো */
+.core-brand-logo {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%);
-  filter: blur(20px);
-  animation: pulse-aura 3s infinite ease-in-out;
+  object-cover: cover;
+  border: 1.5px solid var(--neon-cyan);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.7);
+  animation: float-logo 2.5s ease-in-out infinite alternate;
 }
 
-/* Orb এর বিভিন্ন স্ট্যাটাস */
-.ai-orb.listening {
-  background: linear-gradient(135deg, #ff0055, #ff5500);
-  box-shadow: 0 0 70px rgba(255, 0, 85, 0.8);
-  transform: scale(1.1);
-}
-
-.ai-orb.thinking {
-  background: linear-gradient(135deg, #ffaa00, #00f2fe);
-  box-shadow: 0 0 70px rgba(255, 170, 0, 0.8);
-  animation: rotate-ring 3s linear infinite;
-}
-
-.ai-orb.speaking {
-  background: linear-gradient(135deg, #00f2fe, #7928ca);
-  box-shadow: 0 0 80px rgba(0, 242, 254, 0.9);
-  animation: pulse-speaking 1s infinite alternate;
-}
-
-@keyframes rotate-ring {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes pulse-aura {
-  0%, 100% { transform: scale(0.9); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 0.9; }
-}
-
-@keyframes pulse-speaking {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.12); }
-}
-
-/* সাউন্ড ওয়েভ বার */
-.sound-wave {
+/* মিনি সাউন্ড ইকুয়ালাইজার বার (লোগোর নিচে) */
+.mini-equalizer {
   display: flex;
   align-items: center;
-  gap: 4px;
-  height: 30px;
+  gap: 3px;
+  height: 12px;
+  margin-top: 6px;
 }
 
-.sound-wave span {
-  width: 4px;
-  height: 10px;
+.mini-equalizer span {
+  width: 3px;
+  height: 4px;
   background: var(--neon-cyan);
-  border-radius: 4px;
+  border-radius: 2px;
   transition: 0.2s;
 }
 
-.sound-wave.active span {
-  animation: wave 0.8s infinite ease-in-out;
+.mini-equalizer.active span {
+  animation: eq-bounce 0.8s infinite ease-in-out;
+}
+.mini-equalizer.active span:nth-child(2) { animation-delay: 0.15s; background: var(--neon-pink); }
+.mini-equalizer.active span:nth-child(3) { animation-delay: 0.3s; }
+.mini-equalizer.active span:nth-child(4) { animation-delay: 0.2s; background: var(--neon-purple); }
+
+/* অ্যানিমেশন কি-ফ্রেমস */
+@keyframes radar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes radar-spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+@keyframes core-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes aura-pulse {
+  0%, 100% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.18); opacity: 0.85; }
+}
+@keyframes float-logo {
+  0% { transform: translateY(-2px) scale(0.98); }
+  100% { transform: translateY(2px) scale(1.04); }
+}
+@keyframes eq-bounce {
+  0%, 100% { height: 3px; }
+  50% { height: 11px; }
 }
 
-.sound-wave.active span:nth-child(2) { animation-delay: 0.15s; }
-.sound-wave.active span:nth-child(3) { animation-delay: 0.3s; }
-.sound-wave.active span:nth-child(4) { animation-delay: 0.45s; }
-.sound-wave.active span:nth-child(5) { animation-delay: 0.2s; }
-
-@keyframes wave {
-  0%, 100% { height: 8px; }
-  50% { height: 28px; background: var(--neon-pink); }
+/* কথা বলার সময় (Speaking / Listening) স্টাইল */
+.ai-core-sphere.listening {
+  background: conic-gradient(from 0deg, #ff0055, #ff7700, #ff0055);
+  box-shadow: 0 0 60px rgba(255, 0, 85, 0.8);
+  transform: scale(1.08);
+}
+.ai-core-sphere.thinking {
+  animation: core-rotate 2s linear infinite;
+  box-shadow: 0 0 60px rgba(255, 170, 0, 0.8);
+}
+.ai-core-sphere.speaking {
+  box-shadow: 0 0 70px rgba(0, 242, 254, 0.9);
+  animation: core-rotate 3s linear infinite;
 }
