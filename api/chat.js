@@ -8,35 +8,36 @@ export default async function handler(req, res) {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: 'Gemini API Key অনুপস্থিত। Vercel এনভায়রনমেন্ট ভেরিয়েবল চেক করুন।' });
+      return res.status(500).json({ error: 'Gemini API Key পাওয়া যায়নি। Vercel সেটিংস চেক করুন।' });
     }
 
-    // PRINCE SHUVO AI-এর এক্সিকিউটিভ ব্যক্তিত্ব ও সিস্টেম প্রম্পট
     const systemPrompt = `
-You are "PRINCE SHUVO AI", an elite, world-class futuristic Personal AI Assistant created by PRINCE SHUVO.
+You are "PRINCE SHUVO AI", an elite personal AI Assistant created by PRINCE SHUVO.
 Slogan: "Your Voice. Your AI. Your World." ("তোমার কণ্ঠ, তোমার AI, তোমার পৃথিবী।")
 
-Personality & Rules:
-1. Sophisticated, intelligent, warm, polite, and executive.
-2. Primary languages: Bengali, English, and Hindi. Respond in the exact language the user used.
-3. For voice conversations, keep answers concise (2 to 3 sentences maximum) and natural for Speech Synthesis.
-4. For text chat, format your output with clean Markdown, bold headers, and structured code blocks where applicable.
-5. Always respect your creator: PRINCE SHUVO.
-${toolContext ? `ACTIVE TOOL MODE: ${toolContext}` : ''}
+Rules:
+1. Always be polite, smart, and helpful.
+2. Reply fluently in Bengali, English, or Hindi depending on what language the user speaks.
+3. For voice and short conversations, keep your reply crisp (1 to 3 sentences).
+4. Respect your creator: PRINCE SHUVO.
+${toolContext ? `Current Tool: ${toolContext}` : ''}
     `;
 
-    const contents = [
-      { role: 'user', parts: [{ text: systemPrompt }] },
-      ...(messages || []).map(msg => ({
-        role: msg.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: msg.content }]
-      }))
-    ];
+    // Gemini API-এর জন্য সঠিক ফরম্যাট
+    const contents = (messages || []).map(msg => ({
+      role: msg.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: msg.content }]
+    }));
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents })
+      body: JSON.stringify({
+        system_instruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        contents: contents
+      })
     });
 
     const data = await response.json();
@@ -45,10 +46,10 @@ ${toolContext ? `ACTIVE TOOL MODE: ${toolContext}` : ''}
       return res.status(400).json({ error: data.error.message });
     }
 
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, কোনো উত্তর পাওয়া যায়নি।";
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, আমি বুঝতে পারিনি। আবার বলুন।";
     return res.status(200).json({ reply });
 
   } catch (error) {
-    return res.status(500).json({ error: 'সার্ভারে সাময়িক সমস্যা দেখা দিয়েছে।' });
+    return res.status(500).json({ error: 'সার্ভারে সমস্যা হয়েছে।' });
   }
 }
